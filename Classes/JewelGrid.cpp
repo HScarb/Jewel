@@ -129,7 +129,7 @@ bool JewelGrid::canCrush()
 	int seqCount = 0;
 	Jewel * JewelBegin = nullptr;
 	Jewel * JewelNext = nullptr;
-
+	
 	// 遍历每一列
 	for (int x = 0; x < m_col;x++)
 	{
@@ -147,12 +147,70 @@ bool JewelGrid::canCrush()
 					break;
 				JewelNext = m_JewelBox[x][nextIndex];
 			}
-
+			// if seqCount >= 3 than crush
+			if (seqCount >= 3)
+			{
+				for (int n = 0; n < seqCount;n++)
+				{
+					auto jewel = m_JewelBox[x][y + n];
+					m_crushingJewelBox.pushBack(jewel);
+				}
+			}
+			y += seqCount;
 		}
 	}
+	// 遍历每一行
+	for (int y = 0; y < m_row; y++)
+	{
+		for (int x = 0; x < m_col - 1;)
+		{
+			seqCount = 1;
+			JewelBegin = m_JewelBox[x][y];
+			JewelNext = m_JewelBox[x + 1][y];
+
+			while (JewelBegin->getType() == JewelNext->getType())
+			{
+				seqCount++;
+				int nextIndex = x + seqCount;
+				if (nextIndex > m_col - 2)
+					break;
+				JewelNext = m_JewelBox[nextIndex][y];
+			}
+			if(seqCount >= 3)
+			{
+				for (int n = 0; n < seqCount;n++)
+				{
+					auto jewel = m_JewelBox[x + n][y];
+					// 有可能存在宝石同行列可消除，那么不能重复储存到消除宝石的盒子
+					if (m_crushingJewelBox.find(jewel) != m_crushingJewelBox.end())
+						continue;
+					m_crushingJewelBox.pushBack(jewel);
+				}
+			}
+			x += seqCount;
+		}
+	}
+	// if crushing jewel box isn't empty, return true
+	if (!m_crushingJewelBox.empty())
+		return true;
+	else
+		return false;
 }
 
-void JewelGrid::doCrush() {}
+void JewelGrid::doCrush()
+{
+	for (auto jewel: m_crushingJewelBox)
+	{
+		// create new jewel, locate at a line above JewelBox
+		auto newJewel = Jewel::createByType(random(FIRST_JEWEL_ID, LAST_JEWEL_ID), jewel->getX(), m_row);
+		setJewelPixPos(newJewel, newJewel->getX(), m_row);
+		addChild(newJewel);
+
+		m_newJewelBox.pushBack(newJewel);
+		m_JewelBox[jewel->getX()][jewel->getY()] = nullptr;
+		jewel->crush();
+	}
+}
 
 void JewelGrid::onJewelsSwapping(float dt) {}
 

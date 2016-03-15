@@ -150,6 +150,7 @@ xcopy /Y /Q "$(COCOS_X_ROOT)\cocos2d-x-3.10\prebuilt\win32\*.*" "$(OutDir)"
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\Jewel.cpp" />
     <ClCompile Include="..\Classes\JewelGrid.cpp" />
+    <ClCompile Include="..\Classes\LoadingScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +158,7 @@ xcopy /Y /Q "$(COCOS_X_ROOT)\cocos2d-x-3.10\prebuilt\win32\*.*" "$(OutDir)"
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="..\Classes\Jewel.h" />
     <ClInclude Include="..\Classes\JewelGrid.h" />
+    <ClInclude Include="..\Classes\LoadingScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
